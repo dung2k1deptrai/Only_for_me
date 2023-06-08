@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: einvoice-tctn-application
+  name: tctn-application
+  namespace: ?
+spec:
+  replicas: ?
+  selector:
+    matchLabels:
+      app: einvoice-tctn-application
+  template:
+    metadata:
+      labels:
+        app: einvoice-tctn-application
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node.role
+                    operator: In
+                    values: [?]
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - einvoice-tctn-application
+                topologyKey: "kubernetes.io/hostname"
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: logs
+          hostPath:
+            path: /u01/einvoice/logs
+            type: Directory
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: tctn-application-config
+          image: 10.60.156.72/hddt/tctn-application-master
+          name: ?
+          ports:
+            - name: http
+              containerPort: 8040
+          volumeMounts:
+            - name: tmp ?
+              mountPath: /tmp
+            - name: logs
+              mountPath: /logs
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+          livenessProbe:
+            httpGet:
+              path: /k8s/health/liveness
+              port: http
+            initialDelaySeconds: 90
+            timeoutSeconds: 15
+            periodSeconds: 15
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /k8s/health/readiness
+              port: http
+            initialDelaySeconds: 90
+            timeoutSeconds: 15
+            periodSeconds: 12
+            successThreshold: 1
+            failureThreshold: 3
+          resources: {}

@@ -1,0 +1,67 @@
+version: '2.2'
+services:
+  tctn-process_ins:
+    network_mode: host
+    image: 10.60.156.72/hddt/tctn-inbound-gateway-master
+    scale : 1
+    volumes:
+      - ./logs:/logs
+    #ports:
+      #- '8030:8030'
+    environment:
+      - SERVER_PORT=8030
+      - _JAVA_OPTIONS=-Xmx4096m -Xms256m
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@10.255.63.112:9080/eureka,http://admin:$${jhipster.registry.password}@10.255.63.113:9080/eureka
+      - SPRING_PROFILES_ACTIVE=prod,prod-mini
+  tctn-process_ins_2:
+    network_mode: host
+    image: 10.60.156.72/hddt/tctn-inbound-gateway-master
+    scale : 1
+    volumes:
+      - ./logs:/logs
+    #ports:
+      # '8031:8031'
+    environment:
+      - SERVER_PORT=8031
+      - _JAVA_OPTIONS=-Xmx4096m -Xms256m
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@10.255.63.112:9080/eureka,http://admin:$${jhipster.registry.password}@10.255.63.113:9080/eureka
+      - SPRING_PROFILES_ACTIVE=prod,prod-mini
+  tctn-process_ins_3:
+    network_mode: host
+    image: 10.60.156.72/hddt/tctn-inbound-gateway-master
+    scale : 1
+    volumes:
+      - ./logs:/logs
+    #ports:
+     # - '8030'
+    environment:
+      - SERVER_PORT=8032
+      - _JAVA_OPTIONS=-Xmx4096m -Xms256m
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@10.255.63.112:9080/eureka,http://admin:$${jhipster.registry.password}@10.255.63.113:9080/eureka
+      - SPRING_PROFILES_ACTIVE=prod,prod-mini
+  tctn-process_ins_4:
+    network_mode: host
+    image: 10.60.156.72/hddt/tctn-inbound-gateway-master
+    scale : 1
+    volumes:
+      - ./logs:/logs
+    #ports:
+     # - '8030'
+    environment:
+      - SERVER_PORT=8040
+      - _JAVA_OPTIONS=-Xmx4096m -Xms256m
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@10.255.63.112:9080/eureka,http://admin:$${jhipster.registry.password}@10.255.63.113:9080/eureka
+      - SPRING_PROFILES_ACTIVE=prod,prod-mini
+  tctn-process_ins_5:
+    network_mode: host
+    image: 10.60.156.72/hddt/tctn-inbound-gateway-master
+    scale : 1
+    volumes:
+      - ./logs:/logs
+    #ports:
+     # - '8030'
+    environment:
+      - SERVER_PORT=8041
+      - _JAVA_OPTIONS=-Xmx4096m -Xms256m
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@10.255.63.112:9080/eureka,http://admin:$${jhipster.registry.password}@10.255.63.113:9080/eureka
+      - SPRING_PROFILES_ACTIVE=prod,prod-mini

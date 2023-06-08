@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tctn-application-config
+  namespace: ?
+data:
+  SERVER_PORT: ""
+  SPRING_PROFILES_ACTIVE: prod,prod-mini,no-liquibase
+  _JAVA_OPTIONS: -Xmx4096m -Xms256m
