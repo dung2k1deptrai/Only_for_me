@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: einvoice-application-cluster1
+  name: application
+  namespace: einvoice-cluster1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: einvoice-application-cluster1
+  template:
+    metadata:
+      labels:
+        app: einvoice-application-cluster1
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node.role
+                operator: In
+                values:
+                - einvoice-cluster1
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - einvoice-application-cluster1
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: application-config
+        image: registry.kcntt.net/hddt/einvoice-application-vtt
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /k8s/health/liveness
+            port: http
+          initialDelaySeconds: 90
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 15
+        name: einvoice-application-cluster1
+        ports:
+        - containerPort: 8041
+          name: http
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /k8s/health/readiness
+            port: http
+          initialDelaySeconds: 90
+          periodSeconds: 12
+          successThreshold: 1
+          timeoutSeconds: 15
+        resources:
+          limits:
+            cpu: 2700m
+            memory: 22Gi
+          requests:
+            cpu: 1350m
+            memory: 11Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /app/logs
+          name: logs
+      volumes:
+      - emptyDir: {}
+        name: tmp
+      - hostPath:
+          path: /u01/einvoice/logs
+          type: Directory
+        name: logs
