@@ -13,16 +13,21 @@
 # with open('output.yaml', 'w') as fp:
 #     yaml.dump(config, fp)
 
-import yaml
+# import yaml
+#
+# fname = "test.yaml"
+#
+# stream = open(fname, 'r')
+# data = yaml.full_load(stream)
+#
+# data['spec']['template']['spec']['containers'][0]['securityContext']['readOnlyRootFilesystem'] = True
+#
+#
+# with open(fname, 'w') as yaml_file:
+#     yaml_file.write( yaml.dump(data, default_flow_style=False))
 
-fname = "test.yaml"
+# loop through file in folder
+import glob
 
-stream = open(fname, 'r')
-data = yaml.full_load(stream)
-
-data['spec']['template']['spec']['containers'][0]['securityContext']['readOnlyRootFilesystem'] = True
-# data['instances'][0]['username'] = 'Username'
-# data['instances'][0]['password'] = 'Password'
-
-with open(fname, 'w') as yaml_file:
-    yaml_file.write( yaml.dump(data, default_flow_style=False))
+for filepath in glob.iglob('D:\Only_for_me\yaml-diff-tool/*.py'):
+    print(filepath)
